@@ -59,7 +59,7 @@ ani_cache.setdefault('reported_ids', set())
 
 async def fetch_animes():
     await rep.report("Fetch Animes Started !!", "info")
-    while False:
+    while True:
         await asleep(60)
         if ani_cache['fetch_animes']:
             for idx, rss_list in enumerate([Var.RSS_ITEMS_1, Var.RSS_ITEMS_2], start=1):
