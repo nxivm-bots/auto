@@ -130,9 +130,9 @@ async def get_animes(name, torrent, force=False):
 
             bot_loop.create_task(post_channel_info_delayed(anime_title, post_msg.id))
 
-            await bot.send_sticker(channel_id, "CAACAgUAAxkBAAEBaQZoaFz-20hjKjdRx0Q67wKhJa7H9wACOxkAAqNcQFfHOLnxo8XllR4E")
+            await bot.send_sticker(channel_id, "CAACAgUAAxkBAAEPKRdon3gFns8wvPnI64hxrYdUklyhtwACGg4AAlOqcVTITp3BpxWO0jYE")
             await asleep(1.5)
-            stat_msg = await sendMessage(channel_id, f"‣ <b>Anime Name :</b> <b><i>{name}</i></b>\n\n<i>Downloading...</i>\n\nPowered by @KGN_BOTZ ,Owner @ExE_AQUIB Anime Index- @KGN_ANIME_INDEX")
+            stat_msg = await sendMessage(channel_id, f"‣ <b>Anime Name :</b> <b><i>{name}</i></b>\n\n<i>Downloading...</i>\n\nPowered by @nxivm_network ,Owner @odacchi Anime Index- @nxivm_index")
 
             stop_event = asyncio.Event()
             monitor_task = asyncio.create_task(live_status_updater(stat_msg, name, "📥 Downloading", stop_event))
@@ -150,7 +150,7 @@ async def get_animes(name, torrent, force=False):
             ff_queued[post_id] = ffEvent
 
             if ffLock.locked():
-                await editMessage(stat_msg, f"‣ <b>Anime Name :</b> <b><i>{name}</i></b>\n\n<i>Queued to Encode...</i>\n\nPowered by @KGN_BOTZ ,Owner @ExE_AQUIB Anime Index- @KGN_ANIME_INDEX")
+                await editMessage(stat_msg, f"‣ <b>Anime Name :</b> <b><i>{name}</i></b>\n\n<i>Queued to Encode...</i>\n\nPowered by @nxivm_network ,Owner @odacchi Anime Index- @nxivm_index")
                 await rep.report("Added Task to Queue...", "info")
 
             await ffQueue.put(post_id)
@@ -160,7 +160,7 @@ async def get_animes(name, torrent, force=False):
             btns = []
             for qual in Var.QUALS:
                 filename = await aniInfo.get_upname(qual)
-                await editMessage(stat_msg, f"‣ <b>Anime Name :</b> <b><i>{name}</i></b>\n\n<i>Ready to Encode...</i>\n\nPowered by @KGN_BOTZ ,Owner @ExE_AQUIB Anime Index- @KGN_ANIME_INDEX")
+                await editMessage(stat_msg, f"‣ <b>Anime Name :</b> <b><i>{name}</i></b>\n\n<i>Ready to Encode...</i>\n\nPowered by @nxivm_network ,Owner @odacchi Anime Index- @nxivm_index")
                 await asleep(1.5)
                 await rep.report("Starting Encode...", "info")
 
@@ -175,7 +175,7 @@ async def get_animes(name, torrent, force=False):
                     return
 
                 await rep.report("Successfully Compressed. Now Uploading...", "info")
-                await editMessage(stat_msg, f"‣ <b>Anime Name :</b> <b><i>{filename}</i></b>\n\n<i>Ready to Upload...</i>\n\nPowered by @KGN_BOTZ ,Owner @ExE_AQUIB Anime Index- @KGN_ANIME_INDEX")
+                await editMessage(stat_msg, f"‣ <b>Anime Name :</b> <b><i>{filename}</i></b>\n\n<i>Ready to Upload...</i>\n\nPowered by @nxivm_network ,Owner @odacchi Anime Index- @nxivm_index")
                 await asleep(1.5)
 
                 try:
@@ -303,7 +303,7 @@ async def post_channel_info_delayed(anime_name: str, post_id: int):
 <b>⧫ Runtime: {duration} mins</b>
 
 <blockquote expandable>"""
-    footer = "</blockquote>\n\nᴘʀᴇsᴇɴᴛᴇᴅ ʙʏ : <a href=\"https://t.me/chrunchyrool\">ᴄ ʀ ᴜ ɴ ᴄ ʜ ʏ ʀ σ σ ʟ</a>"
+    footer = "</blockquote>\n\nᴘʀᴇsᴇɴᴛᴇᴅ ʙʏ : <a href=\"https://t.me/nxivm_network\">nxivm network</a>"
     max_caption_len = 1024
 
     base_len = len(header + footer + quote_text + "\n\n")
