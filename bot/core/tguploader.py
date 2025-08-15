@@ -45,27 +45,30 @@ class TgUploader:
                         return temp_path
         return None
 
+    
     def rename_file(self, old_name, qual):
-        # Extract season and episode
+    # Extract season and episode
         match = re.search(r"S(\d{2})E(\d{2})", old_name, re.IGNORECASE)
         season = match.group(1) if match else "01"
         episode = match.group(2) if match else "01"
-
-        # Get formatted quality from mapping
         quality_label = btn_formatter.get(qual, qual)
 
-        # Determine audio type
+    # Detect audio type
         audio_type = "Sub"
         if re.search(r"DUAL", old_name, re.IGNORECASE):
             audio_type = "Dual"
         elif re.search(r"DUB", old_name, re.IGNORECASE):
             audio_type = "Dub"
 
-        # Build consistent file name & caption
+    # Extract anime name
+        name_match = re.split(r"S\d{2}E\d{2}", old_name, flags=re.IGNORECASE)
+        anime_name = name_match[0].strip().replace('.', ' ').replace('_', ' ')
+        anime_name = anime_name.title() 
+
         new_name = (
-        f"[NA] {anime_name} - "
-        f"[S{season}- E{episode}] [{quality_label} - {audio_type}]@ongoing_nxivm.mkv"
-    )
+            f"[NA] {anime_name} - "
+            f"[S{season}- E{episode}] [{quality_label} - {audio_type}]@ongoing_nxivm.mkv"
+        )
 
         return new_name
 
