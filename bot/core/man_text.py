@@ -98,7 +98,7 @@ class TestEditor:
         season = self.pdata.get('anime_season', '01')
 
         if anime_name and episode_number:
-            return f"{anime_name} - {episode_number} ({qual}p) [{codec}] [{lang}] [@chrunchyrool].mkv"
+            return f"{anime_name} - {episode_number} ({qual}p) [{codec}] [{lang}] [@ongoing_nxivm].mkv"
 
 # Encoding & Upload Process
 async def encode_and_upload(dl_path, quality, message):
