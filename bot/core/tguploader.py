@@ -63,9 +63,9 @@ class TgUploader:
 
         # Build consistent file name & caption
         new_name = (
-            f"[NA] Private Tutor to the Duke's Daughter - "
-            f"[S{season}- E{episode}] [{quality_label} - {audio_type}]@ongoing_nxivm.mkv"
-        )
+        f"[NA] {anime_name} - "
+        f"[S{season}- E{episode}] [{quality_label} - {audio_type}]@ongoing_nxivm.mkv"
+    )
 
         return new_name
 
