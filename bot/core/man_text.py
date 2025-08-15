@@ -16,7 +16,7 @@ CAPTION_FORMAT = """
 <b>├ 📺 Episodes : {ep_no}</b>
 <b>├ 💾 Quality : 480p, 720p 1080p & HDRIp</b>
 <b>├ 🎭 Genres: {genres}</b>
-<b>├ 🔊 Audio track : {lang} </b>
+<b>├ 🎼 Audio track : {lang} </b>
 <b>╰───────────────────</b>
 <b>Report Errors: @pro_roger</b>
 ╭┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅
