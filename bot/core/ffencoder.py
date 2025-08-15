@@ -201,8 +201,8 @@ class FFEncoder:
             # Detect audio languages dynamically
             audio_langs = self.detect_audio_languages(dl_npath)
             for idx, lang in audio_langs:
-                ffcode += f" -metadata:s:a:{idx} title='@ongoing_nxivm'"
-                #ffcode += f" -metadata:s:a:{idx} #language={lang} -metadata:s:a:{idx} #title='@chrunchyrool'"
+                #ffcode += f" -metadata:s:a:{idx} title='@ongoing_nxivm'"
+                ffcode += f" -metadata:s:a:{idx} #language={lang} -metadata:s:a:{idx} #title='@ongoing_nxivm'"
 
         ffcode += f" '{out_npath}' -y"
 
