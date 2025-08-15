@@ -21,18 +21,10 @@ def stylize_quote(text: str) -> str:
 
 
 CAPTION_FORMAT = """
-<b>✨<u>『 {title} 』</u></b>
-
-<b>╭━━━⌬ 𝙰𝙽𝙸𝙼𝙴 𝙳𝙴𝚃𝙰𝙸𝙻𝚂 ⌬━━━╮</b>
-<b>┃ 🆂  Season  : {season_number}</b>
-<b>┃ 🎞️ Episode : {ep_no}</b>
-<b>┃ 📦 Quality : 480p 720p 1080p HDRip</b>
-<b>┃ 🧬 Genres  : {genres}</b>
-<b>┃ 🎧 Audio   : {lang_info}</b>
-<b>╰━━━⌬ 𝙰𝙽𝙸𝙼𝙴 𝙳𝙴𝚃𝙰𝙸𝙻𝚂 ⌬━━━╯</b>
-
-<blockquote><b>{next_airing_info}</b></blockquote>
+<b>Episode {ep_no} {lang_info}</b>
+<b>How to download - <a href="https://t.me/tutorita/18">Click Here</a></b>
 """
+
 
 
 
