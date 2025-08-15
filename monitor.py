@@ -19,7 +19,7 @@ async def live_status_updater(msg, filename: str, stage: str, stop_event: asynci
 <b>🔧 𝙨𝙚𝙧𝙫𝙚𝙧 𝙨𝙩𝙖𝙩𝙪𝙨</b>
 {usage}
 
-Powered by @Codeflix_bots""")
+Powered by @ongoing_nxivm""")
         except:
             pass
         await asyncio.sleep(5)

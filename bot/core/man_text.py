@@ -20,7 +20,7 @@ CAPTION_FORMAT = """
 <b>╰───────────────────</b>
 <b>Report Errors: @pro_roger</b>
 ╭┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅
-⌬  <b><i>Powered by @Codeflix_bots</i></b>
+⌬  <b><i>Powered by @ongoing_nxivm</i></b>
 ╰┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅
 """
 

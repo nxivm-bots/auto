@@ -141,7 +141,7 @@ class TgUploader:
 
 ‣ <b>File(s) Uploaded:</b> <code>{Var.QUALS.index(self.__qual)} / {len(Var.QUALS)}</code>
 
-<b>Powered by @Codeflix_bots</b>"""
+<b>Powered by @ongoing_nxivm</b>"""
             await editMessage(self.message, progress_str)
 
 
