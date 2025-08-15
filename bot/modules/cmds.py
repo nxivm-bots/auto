@@ -324,54 +324,37 @@ async def not_joined(client: Client, message: Message):
         for total, chat_id in enumerate(await db.get_all_channels(), start=1):
             await message.reply_chat_action(ChatAction.PLAYING)
 
-            # Show join button of non-subscribed Channels
+            # Show the join button of non-subscribed Channels.....
             if not await is_userJoin(client, user_id, chat_id):
                 try:
-                    # Get chat data from cache or API
+                    # Check if chat data is in cache
                     if chat_id in chat_data_cache:
-                        data = chat_data_cache[chat_id]
+                        data = chat_data_cache[chat_id]  # Get data from cache
                     else:
-                        data = await client.get_chat(chat_id)
-                        chat_data_cache[chat_id] = data
+                        data = await client.get_chat(chat_id)  # Fetch from API
+                        chat_data_cache[chat_id] = data  # Store in cache
 
                     cname = data.title
 
-                    # Handle private/public invite link generation with expiry
-                    if REQFSUB and not data.username:
-                        invite = await client.create_chat_invite_link(
-                                chat_id=chat_id,
-                                creates_join_request=True,
-                                expire_date=(
-                                    datetime.utcnow() + timedelta(seconds=FSUB_LINK_EXPIRY)
-                                    if FSUB_LINK_EXPIRY else None
-                                )
-                            )
-                        link = invite.invite_link
-
+                    # Handle private channels and links
+                    if REQFSUB and not data.username: 
+                        link = await db.get_stored_reqLink(chat_id)
                         await db.add_reqChannel(chat_id)
 
+                        if not link:
+                            link = (await client.create_chat_invite_link(chat_id=chat_id, creates_join_request=True)).invite_link
+                            await db.store_reqLink(chat_id, link)
                     else:
-                        # Public group or channel with username
-                        invite = await client.create_chat_invite_link(
-                            chat_id=chat_id,
-                            expire_date=(
-                                datetime.utcnow() + timedelta(seconds=FSUB_LINK_EXPIRY)
-                                if FSUB_LINK_EXPIRY else None
-                            )
-                        )
-                        link = invite.invite_link
+                        link = data.invite_link
 
-                    # Add the button for this channel
+                    # Add button for the chat
                     buttons.append([InlineKeyboardButton(text=cname, url=link)])
                     count += 1
                     await temp.edit(f"<b>{'! ' * count}</b>")
 
                 except Exception as e:
-                    print(f"Can't export channel name/link, please check bot admin rights in FORCE SUB channels: {chat_id}")
-                    return await temp.edit(
-                        f"<b><i>! Eʀʀᴏʀ, Cᴏɴᴛᴀᴄᴛ developer @pro_roger</i></b>\n"
-                        f"<blockquote expandable><b>Reason:</b> {e}</blockquote>"
-                    )
+                    print(f"Can't Export Channel Name and Link..., Please Check If the Bot is admin in the FORCE SUB CHANNELS:\nProvided Force sub Channel:- {chat_id}")
+                    return await temp.edit(f"<b><i>! Eʀʀᴏʀ, </i></b>\n<blockquote expandable><b>Rᴇᴀsᴏɴ:</b> {e}</blockquote>")
 
         try:
             buttons.append([InlineKeyboardButton(text='♻️ Tʀʏ Aɢᴀɪɴ', url=f"https://t.me/{bot_username}?start={message.command[1]}")])
@@ -387,16 +370,13 @@ async def not_joined(client: Client, message: Message):
                 mention=message.from_user.mention,
                 id=message.from_user.id
             ),
-            reply_markup=InlineKeyboardMarkup(buttons)
-        )
-
+            reply_markup=InlineKeyboardMarkup(buttons))#,
+    #message_effect_id=5104841245755180586  #🔥 Add the effect ID here
+        #)
     except Exception as e:
-        print(f"Error: {e}")
-        await temp.edit(
-            f"<b><i>! Eʀʀᴏʀ, Cᴏɴᴛᴀᴄᴛ developer @pro_roger</i></b>\n"
-            f"<blockquote expandable><b>Reason:</b> {e}</blockquote>"
-        )
-    
+        print(f"Error: {e}")  # Print the error message for debugging
+        # Optionally, send an error message to the user or handle further actions here
+        await temp.edit(f"<b><i>! Eʀʀᴏʀ, </i></b>\n<blockquote expandable><b>Rᴇᴀsᴏɴ:</b> {e}</blockquote>")
 
 @bot.on_message(command('start') & private)
 @new_task
