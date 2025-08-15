@@ -60,15 +60,18 @@ class TgUploader:
         elif re.search(r"DUB", old_name, re.IGNORECASE):
             audio_type = "Dub"
 
-    # Extract anime name
+    # Extract anime name 
         name_match = re.split(r"S\d{2}E\d{2}", old_name, flags=re.IGNORECASE)
-        anime_name = name_match[0].strip().replace('.', ' ').replace('_', ' ')
-        anime_name = anime_name.title() 
+        anime_name = name_match[1] if len(name_match) > 1 else name_match[0]
+        anime_name = re.sub(r"\[.*?\]", "", anime_name)  # Remove bracketed parts like [HDRip]
+        anime_name = anime_name.strip().replace('.', ' ').replace('_', ' ')
+        anime_name = anime_name.title()
 
+    # Format in desired style
         new_name = (
             f"[NA] {anime_name} - "
             f"[S{season}- E{episode}] [{quality_label} - {audio_type}]@ongoing_nxivm.mkv"
-        )
+    )
 
         return new_name
 
