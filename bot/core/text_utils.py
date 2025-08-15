@@ -350,7 +350,7 @@ class TextEditor:
                 f"{processed_title} "
                 f"{'['+qual+'p]' if qual else ''}"
                 f"{'['+codec.upper()+']' if codec else ''} "
-                f"{'' +lang+ '' if lang else ''} [@chrunchyrool].mkv"
+                f"{'' +lang+ '' if lang else ''} [@ongoing_nxivm].mkv"
             )
 
     @handle_logs

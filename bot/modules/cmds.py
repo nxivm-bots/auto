@@ -445,10 +445,10 @@ async def start_msg(client, message):
                 photo=Var.START_PHOTO, 
                 caption=smsg,
                 reply_markup=InlineKeyboardMarkup([
-                    [InlineKeyboardButton("• ғɪɴɪsʜᴇᴅ •", url='https://t.me/KGN_BOTZ')],
+                    [InlineKeyboardButton("• ғɪɴɪsʜᴇᴅ •", url='https://t.me/nxivm_anime')],
                     [InlineKeyboardButton("• ᴄʜᴀɴɴᴇʟs", callback_data='channel'),
-                     InlineKeyboardButton("• ᴄʜᴀᴛ •", url='https://t.me/KGN_SUPPORTZ')],
-                    [InlineKeyboardButton("• ᴏᴜʀ ᴄᴏᴍᴍᴜɴɪᴛʏ •", url='https://t.me/chrunchyrool')],
+                     InlineKeyboardButton("• ᴄʜᴀᴛ •", url='https://t.me/racistchat')],
+                    [InlineKeyboardButton("• ᴏᴜʀ ᴄᴏᴍᴍᴜɴɪᴛʏ •", url='https://t.me/nxivm_network')],
                 ])
             )
         else:
