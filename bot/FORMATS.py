@@ -14,7 +14,7 @@ START_PIC = "https://graph.org/file/4d765d3c53783f6ff670d-21029256a9aeab6a6a.jpg
 FORCE_PIC = "https://graph.org/file/4d765d3c53783f6ff670d-21029256a9aeab6a6a.jpg"
 
 
-CUSTOM_CAPTION = "<b>» ʙʏ <a href=https://t.me/+RRPZEqvATG9iYTM1>ɴᴏᴠᴀ ғʟɪx</a></b>"
+CUSTOM_CAPTION = "<b><i>{original_caption}</i></b>"
 
 #start message
 START_MSG = """<b>›› ʜᴇʏ!!, {mention} ~
