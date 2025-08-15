@@ -329,7 +329,7 @@ async def post_channel_info_delayed(anime_name: str, post_id: int):
                     caption=caption,
                     reply_markup=InlineKeyboardMarkup([[
                         InlineKeyboardButton(
-                            "⛩️ 𝐂𝐋𝐈𝐂𝐊 𝐇𝐄𝐑𝐄 𝐓𝐎 𝐖𝐀𝐓𝐂𝐇 𝐈𝐓 ⛩️",
+                            "EPISODE {episode}",
                             url=invite_link
                         )
                     ]])
@@ -353,10 +353,10 @@ async def post_channel_info_delayed(anime_name: str, post_id: int):
             await bot.send_photo(
                 channel_id1,
                 photo=poster,
-                caption=caption,
+                caption=None,
                 reply_markup=InlineKeyboardMarkup([[
                     InlineKeyboardButton(
-                        "⛩️ 𝐂𝐋𝐈𝐂𝐊 𝐇𝐄𝐑𝐄 𝐓𝐎 𝐖𝐀𝐓𝐂𝐇 𝐈𝐓 ⛩️",
+                        "EPISODE {episode}",
                         url=invite_link
                     )
                 ]])
