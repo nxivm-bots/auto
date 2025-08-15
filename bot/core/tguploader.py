@@ -11,15 +11,16 @@ from bot import bot, Var
 from .func_utils import editMessage, sendMessage, convertBytes, convertTime
 from .reporter import rep
 import os
+import aiofiles
+import aiohttp
+from time import time, sleep
+from traceback import format_exc
+from math import floor
+from pyrogram.errors import FloodWait
+from pyrogram import Client
+from pyrogram.types import Message
 import re
 
-# Quality formatting mapping
-btn_formatter = {
-    'HDRi': '𝗛𝗗𝗥𝗶𝗣',
-    '1080': '𝟭𝟬𝟴𝟬𝗽',
-    '720': '𝟳𝟮𝟬𝗽',
-    '480': '𝟰𝟴𝟬𝗽',
-}
 
 class TgUploader:
     def __init__(self, message):
@@ -41,68 +42,34 @@ class TgUploader:
                     async with aiofiles.open(temp_path, "wb") as f:
                         await f.write(await resp.read())
 
+                    # Ensure the downloaded file has a valid size
                     if os.path.getsize(temp_path) > 0:
                         return temp_path
-        return None
 
-
-    def rename_file(self, old_name, qual):
-        match = re.search(r"S(\d{2})E(\d{2})", old_name, re.IGNORECASE)
-        season = match.group(1) if match else "01"
-        episode = match.group(2) if match else "01"
-
-        # Detect quality from filename
-        quality_label = btn_formatter.get(qual, qual)
-
-        # Detect audio type
-        audio_type = "Sub"
-        if re.search(r"DUAL", old_name, re.IGNORECASE):
-            audio_type = "Dual"
-        elif re.search(r"DUB", old_name, re.IGNORECASE):
-            audio_type = "Dub"
-
-        # Extract anime name
-        name_match = re.split(r"S\d{2}E\d{2}", old_name, flags=re.IGNORECASE)
-        anime_name = name_match[1] if len(name_match) > 1 else name_match[0]
-        anime_name = re.sub(r"\[.*?\]", "", anime_name)  # Remove bracket
-        anime_name = anime_name.strip().replace('.', ' ').replace('_', ' ')
-        anime_name = anime_name.title()
-
-        # Format in desired style
-        new_name = (
-            f"[NA] {anime_name} - "
-            f"[S{season}- E{episode}] [{quality_label} - {audio_type}]@ongoing_nxivm.mkv"
-        )
-
-        return new_name
+        return None  # Failed to download or empty file
 
     async def upload(self, path, qual):
-        old_name = os.path.basename(path)
-        new_name = self.rename_file(old_name, qual)
-        self.__name = new_name
+        self.__name = os.path.basename(path)
         self.__qual = qual
 
-        # Rename the actual file before upload
-        new_path = ospath.join(ospath.dirname(path), new_name)
-        os.rename(path, new_path)
-        path = new_path
-
-        # Fetch custom thumbnail
+        # Fetch custom thumbnail from DB (download if it's a URL)
         thumbnail = await db.get_thumbnail()
+
+        # Ensure thumbnail is a valid URL before trying to download
         if isinstance(thumbnail, str) and thumbnail.startswith(("http://", "https://")):
             thumbnail = await self.download_thumbnail(thumbnail)
 
+        # Use default local thumbnail if the fetched one is invalid
         if not thumbnail or not os.path.exists(thumbnail) or os.path.getsize(thumbnail) == 0:
             thumbnail = "thumb.jpg" if os.path.exists("thumb.jpg") and os.path.getsize("thumb.jpg") > 0 else None
 
         try:
-            caption_text = f"<i>{self.__name}</i>"
             if Var.AS_DOC:
                 return await self.__client.send_document(
                     chat_id=Var.FILE_STORE,
                     document=path,
                     thumb=thumbnail,
-                    caption=caption_text,
+                    caption=f"<i>{self.__name}</i>",
                     force_document=True,
                     progress=self.progress_status
                 )
@@ -111,7 +78,7 @@ class TgUploader:
                     chat_id=Var.FILE_STORE,
                     video=path,
                     thumb=thumbnail,
-                    caption=caption_text,
+                    caption=f"<i>{self.__name}</i>",
                     progress=self.progress_status
                 )
         except FloodWait as e:
@@ -123,7 +90,7 @@ class TgUploader:
         finally:
             await aioremove(path)
             if thumbnail == "temp_thumb.jpg":
-                os.remove(thumbnail)
+                os.remove(thumbnail)  # Delete downloaded thumbnail safely
 
     async def progress_status(self, current, total):
         if self.cancelled:
@@ -133,22 +100,23 @@ class TgUploader:
         if (now - self.__updater) >= 7 or current == total:
             self.__updater = now
             percent = round(current / total * 100, 2)
-            speed = current / diff
+            speed = current / diff 
             eta = round((total - current) / speed)
             bar = floor(percent / 8) * "■" + (12 - floor(percent / 8)) * "□"
             progress_str = f"""‣ <b>Anime Name :</b> <b><i>{self.__name}</i></b>
 
 ‣ <b>Status :</b> <i>Uploading</i>
-<code>[{bar}]</code> {percent}%
+    <code>[{bar}]</code> {percent}%
+    
+    ‣ <b>Size :</b> {convertBytes(current)} out of ~ {convertBytes(total)}
+    ‣ <b>Speed :</b> {convertBytes(speed)}/s
+    ‣ <b>Time Took :</b> {convertTime(diff)}
+    ‣ <b>Time Left :</b> {convertTime(eta)}
 
-‣ <b>Size :</b> {convertBytes(current)} out of ~ {convertBytes(total)}
-‣ <b>Speed :</b> {convertBytes(speed)}/s
-‣ <b>Time Took :</b> {convertTime(diff)}
-‣ <b>Time Left :</b> {convertTime(eta)}
+‣ <b>File(s) Encoded:</b> <code>{Var.QUALS.index(self.__qual)} / {len(Var.QUALS)}</code>
 
-‣ <b>File(s) Uploaded:</b> <code>{Var.QUALS.index(self.__qual)} / {len(Var.QUALS)}</code>
+<b>Powered by @KGN_BOTZ ,Owner @ExE_AQUIB Anime Index- @KGN_ANIME_INDEX</b>"""
 
-<b>Powered by @ongoing_nxivm</b>"""
             await editMessage(self.message, progress_str)
 
 
@@ -276,7 +244,7 @@ class TgUploaders:
     ‣ <b>Time Took :</b> {convertTime(diff)}
     ‣ <b>Time Left :</b> {convertTime(eta)}
 
-‣ <b>File(s) Encoded:</b> <code>{qual_index} / {len(Var.QUALS)}</code>"""
+‣ <b>File(s) Uploaded:</b> <code>{qual_index} / {len(Var.QUALS)}</code>"""
 
             await editMessage(self.message, progress_str)
 
