@@ -122,10 +122,10 @@ async def get_animes(name, torrent, force=False):
                 await rep.report(f"New Anime Torrent Found!\n\n{name}", "info")
                 ani_cache["reported_ids"].add(ani_id)
 
-            post_msg = await bot.send_photo(
+            post_msg = await bot.send_text(
                 channel_id,
-                photo=await aniInfo.get_poster(),
-                caption=await aniInfo.get_caption()
+                #photo=await aniInfo.get_poster(),
+                text=await aniInfo.get_caption()
             )
 
             bot_loop.create_task(post_channel_info_delayed(anime_title, post_msg.id))
