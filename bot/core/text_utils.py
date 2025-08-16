@@ -279,27 +279,26 @@ class TextEditor:
             return f"https://img.anili.st/media/{anime_id}"
         return "https://i.ibb.co/9xqbNd8/20250521-223014.png"
 
-
     @handle_logs
     async def get_upname(self, qual=""):
         anime_name = self.pdata.get("anime_title")
         codec = 'HEVC' if 'libx266' in ffargs.get(qual, '') else 'AV1' if 'libaom-avi' in ffargs.get(qual, '') else ''
 
-            # ✅ Try custom rename first
+    # ✅ Try custom rename first
         custom_name = await db.get_custom_rename(anime_name)
         if custom_name:
             await db.remove_custom_rename(anime_name)
             return custom_name.replace("{QUAL}", qual).strip()
 
-
-        filename = self.__name  # or self.pdata.get("original_filename")
+    # ✅ Use original filename
+        filename = self.__name or self.pdata.get("original_filename", "")
         filename_lower = filename.lower()
         tags = " ".join(re.findall(r'\((.*?)\)', filename)).lower()
 
+    # ✅ Language detection
         lang = (
-            "DUAL" if "dual" in filename_lower or "dual" in tags
-            else "SUB" if "multi" in filename_lower or "multi" in tags
-            else "SUB"
+            "Dual" if "dual" in filename_lower or "dual" in tags
+            else "Sub"
         )
 
         print("Original filename:", filename)
@@ -313,37 +312,13 @@ class TextEditor:
             anime_season = anime_season[-1] if anime_season else '01'
         anime_season = str(anime_season).zfill(2)
 
-        if anime_name and ep_number:
-            titles = self.adata.get('title', {})
-            raw_title = titles.get('english') or titles.get('romaji') or titles.get('native') or anime_name
-
-            phrases_to_remove = ["season", "part", "arc", "movie", "series", "edition", "chapter"]
-            for phrase in phrases_to_remove:
-                raw_title = re.sub(fr"\s*{phrase}\s*\d*\s*", " ", raw_title, flags=re.IGNORECASE)
-
-            abbr_map = {
-                "chronicles": "Chrons",
-                "adventure": "Adv",
-                "unlimited": "Unlim",
-                "the": "",
-                "and": "&"
-            }
-            for word, abbr in abbr_map.items():
-                raw_title = re.sub(fr"\b{word}\b", abbr, raw_title, flags=re.IGNORECASE)
-
-            processed_title = raw_title.strip()
-            if len(processed_title) > 23:
-                cut = processed_title[:23]
-                last_space = cut.rfind(' ')
-                processed_title = cut[:last_space] if last_space != -1 else cut
-
+        if filename and ep_number:
+        # Final filename 
             return (
-                f"S{anime_season}E{str(ep_number).zfill(2)} "
-                f"{processed_title} "
-                f"{'['+qual+'p]' if qual else ''}"
-                f"{'['+codec.upper()+']' if codec else ''} "
-                f"{'' +lang+ '' if lang else ''} [@ongoing_nxivm].mkv"
+                f"[NA] {filename} - [S{anime_season}- E{str(ep_number).zfill(2)}] "
+                f"[{qual}p - {lang}]@ongoing_nxivm.mkv"
             )
+
 
     @handle_logs
     async def get_caption(self):
