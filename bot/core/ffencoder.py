@@ -22,19 +22,19 @@ ffargs = {
     '1080': (
         "-c:v libx264 -preset veryfast -crf 27 -tune animation "
         "-threads 0 -pix_fmt yuv420p -movflags +faststart "
-        "-c:a libopus -b:a 70k -c:s copy"
+        "-c:a libopus -b:a 70k -ac 2 -c:s copy"
     ),
     '720': (
         "-c:v libx264 -preset veryfast -crf 29 -tune animation "
         "-threads 0 -pix_fmt yuv420p -movflags +faststart "
-        "-c:a libopus -b:a 55k -c:s copy"
+        "-c:a libopus -b:a 55k -ac 2 -c:s copy"
     ),
     '480': (
         "-c:v libx264 -preset veryfast -crf 30 -tune animation "
         "-threads 0 -pix_fmt yuv420p -movflags +faststart "
-        "-c:a libopus -b:a 40k -c:s copy"
+        "-c:a libopus -b:a 40k -ac 2 -c:s copy"
     ),
-    'HDRi': "-c copy"  # For HDRi/HDRip copy mode
+    'HDRi': "-c copy"
 }
 
 # Scaling values
@@ -181,7 +181,11 @@ class FFEncoder:
         ffcode = f"ffmpeg -hide_banner -loglevel error -progress '{self.__prog_file}' -i '{dl_npath}'"
 
         if is_hdrip:
-            ffcode += " -c copy"
+            # Copy without re-encoding, but still add metadata
+            ffcode += (
+                " -c copy "
+                "-metadata:s:a title='@ongoing_nxivm' "
+            )
         else:
             if watermark and ospath.exists(watermark):
                 ffcode += (
@@ -195,14 +199,10 @@ class FFEncoder:
                     f"-map '[out]' -map 0:a -map 0:s?"
                 )
 
-            # Preserve all metadata
-            ffcode += " -map_metadata 0"
-
-            # Detect audio languages dynamically
-            audio_langs = self.detect_audio_languages(dl_npath)
-            for idx, lang in audio_langs:
-                ffcode += f" -metadata:s:a:{idx} title='@ongoing_nxivm'"
-                #ffcode += f" -metadata:s:a:{idx} #language={lang} -metadata:s:a:{idx} #title='@ongoing_nxivm'"
+            ffcode += (
+                f" {ffargs[self.__qual]} "
+                "-metadata:s:a title='@ongoing_nxivm' "
+            )
 
         ffcode += f" '{out_npath}' -y"
 
